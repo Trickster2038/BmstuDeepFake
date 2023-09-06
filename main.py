@@ -1,10 +1,11 @@
 import cv2 as cv
 import time
+import numpy as np
 
 print('===== Init =====')
 
 FILE_PATH = '../ml_fake_videos/fake_freeman_1080.mp4'
-SCALE_PERCENT = 50
+SCALE_PERCENT = 30
 REAL_TIME_DELAY_24_FPS = 1.0 / 24.0
 FPS_LABEL_BORDER_PERCENT = 10 
 
@@ -56,9 +57,11 @@ while vd.isOpened():
     faces = face_classifier.detectMultiScale(gray_image, 1.1, 5, minSize=(40, 40))
     for (x, y, w, h) in faces:
         cv.rectangle(frame_to_show, (x, y), (x + w, y + h), (0, 255, 0), 4)
+    gray_image = cv.cvtColor(gray_image, cv.COLOR_GRAY2BGR)
 
     # show
-    cv.imshow('Play', frame_to_show)
+    multi_frames = np.concatenate((frame_to_show, gray_image), axis=1)
+    cv.imshow('Play', multi_frames)
     time.sleep(REAL_TIME_DELAY_24_FPS)
     if cv.waitKey(1) == ord('q'):
         break
