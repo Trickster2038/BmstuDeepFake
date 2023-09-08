@@ -24,7 +24,7 @@ TEXT_SCALE = 3
 TEXT_THICKNESS = 2
 TEXT_FONT = cv.FONT_HERSHEY_SIMPLEX
 
-HIST_SIZE_PERCENT = 100 # relative to face width
+HIST_SIZE_PERCENT = 50 # relative to face width
 
 global fig, axs
 fig, axs = plt.subplots(len(faceparts.HIST_SCAN_POINTS), 1)

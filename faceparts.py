@@ -14,13 +14,13 @@ HIST_SCAN_POINTS = {
     'r_eye_outer': 46, 
     'l_mouth_outer': 49,
     'center_mouth_top': 63,
-    # 'r_brow_inner': 23,
-    # 'l_brow_outer': 18,
-    # 'r_ear': 17,
-    # 'l_chin': 5,
-    # 'center_chin': 9,
-    # 'forehead': 28,
-    # 'l_nose': 32
+    'r_brow_inner': 23,
+    'l_brow_outer': 18,
+    'r_ear': 17,
+    'l_chin': 5,
+    'center_chin': 9,
+    'forehead': 28,
+    'l_nose': 32
     }
 
 PREDICTOR_DATASET = './shape_predictor_68_face_landmarks.dat'
