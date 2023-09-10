@@ -3,6 +3,8 @@ import time
 import numpy as np
 import faceparts
 from matplotlib import pyplot as plt
+import datacollector
+import pandas as pd
 
 print('===== Init =====')
 
@@ -33,7 +35,7 @@ TEXT_SCALE = 3
 TEXT_THICKNESS = 2
 TEXT_FONT = cv.FONT_HERSHEY_SIMPLEX
 
-HIST_SIZE_PERCENT = 50 # relative to face width
+HIST_SIZE_PERCENT = 15 # relative to face width
 
 # global fig, axs
 # fig, axs = plt.subplots(len(faceparts.HIST_SCAN_POINTS), 1)
@@ -47,7 +49,9 @@ face_classifier = cv.CascadeClassifier(
 vd = cv.VideoCapture(FILE_PATH)
 frame_cnt = 0
 
-first_frame = True
+first_frame = False
+df = None
+
 # ===== MAIN =====
 while vd.isOpened():
     print(f'~ prepare frame #{frame_cnt}')
@@ -91,6 +95,15 @@ while vd.isOpened():
     print(f'~ face recognition type 2 #{frame_cnt}')
     # detect faceparts
     shapes = faceparts.detect_faces(frame_to_show)
+
+    if len(shapes) > 0:
+        d = datacollector.generate_dataframe(FILE_PATH.split('/')[-1], shapes[0], frame, HIST_SIZE_PERCENT)
+        if df is None:
+            df = pd.DataFrame(data=d)
+        else:
+            df = pd.concat([df, d], ignore_index=True)
+
+
     if len(shapes) > 0:
         shp = shapes[0]
         frame_to_show = faceparts.visualize_facial_landmarks(
@@ -189,9 +202,12 @@ while vd.isOpened():
             time.sleep(DELAY)
         if cv.waitKey(WAIT_KEY) == ord('q'):
             break 
+        plt.close('all')
 
-    plt.close('all')
+    first_time = False
 
+print('~ save dataframe.csv')
+df.to_csv('dataframe.csv')
 vd.release()
 cv.destroyAllWindows()
 print("\n===== Final =====")

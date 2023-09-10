@@ -6,21 +6,21 @@ import imutils
 import dlib
 import numpy as np
 
-LEFT_EAR_POINT = 1
-RIGHT_EAR_POINT = 17
+LEFT_EAR_POINT = 0
+RIGHT_EAR_POINT = 16
 
 HIST_SCAN_POINTS = {
-    'r_eye_inner': 43, 
-    'r_eye_outer': 46, 
-    'l_mouth_outer': 49,
-    'center_mouth_top': 63,
-    'r_brow_inner': 23,
-    'l_brow_outer': 18,
-    'r_ear': 17,
-    'l_chin': 5,
-    'center_chin': 9,
-    'forehead': 28,
-    'l_nose': 32
+    'r_eye_inner': 42, 
+    'r_eye_outer': 45, 
+    'l_mouth_outer': 48,
+    'center_mouth_top': 62,
+    'r_brow_inner': 22,
+    'l_brow_outer': 17,
+    'r_ear': 16,
+    'l_chin': 4,
+    'center_chin': 8,
+    'forehead': 27,
+    'l_nose': 31
     }
 
 PREDICTOR_DATASET = './shape_predictor_68_face_landmarks.dat'
