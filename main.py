@@ -6,9 +6,18 @@ from matplotlib import pyplot as plt
 
 print('===== Init =====')
 
-plt.ion()
+# plt.ion()
 
-FILE_PATH = '../ml_fake_videos/fake_freeman_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_freeman_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/real_icc_court_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/real_poperechnii_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_obama_720.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_backtofuture_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_gin_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_joker_1080.mp4'
+# FILE_PATH = '../ml_fake_videos/fake_terminator_720.mp4'
+FILE_PATH = '../ml_fake_videos/real_shulman_1080.mp4'
+
 # SCALE_PERCENT = 30
 MAX_WIDTH = 720
 MAX_HEIGHT = 480
@@ -26,8 +35,10 @@ TEXT_FONT = cv.FONT_HERSHEY_SIMPLEX
 
 HIST_SIZE_PERCENT = 50 # relative to face width
 
-global fig, axs
-fig, axs = plt.subplots(len(faceparts.HIST_SCAN_POINTS), 1)
+# global fig, axs
+# fig, axs = plt.subplots(len(faceparts.HIST_SCAN_POINTS), 1)
+# fig.set_size_inches(len(faceparts.HIST_SCAN_POINTS), 7)
+# plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
 
 face_classifier = cv.CascadeClassifier(
     cv.data.haarcascades + "haarcascade_frontalface_default.xml"
@@ -36,6 +47,7 @@ face_classifier = cv.CascadeClassifier(
 vd = cv.VideoCapture(FILE_PATH)
 frame_cnt = 0
 
+first_frame = True
 # ===== MAIN =====
 while vd.isOpened():
     print(f'~ prepare frame #{frame_cnt}')
@@ -123,6 +135,10 @@ while vd.isOpened():
 
         print(f'~ hists for face recognition type 2 #{frame_cnt}')
         face_parts_frames = []
+
+        fig, axs = plt.subplots(len(faceparts.HIST_SCAN_POINTS), 1)
+        # fig.set_size_inches(7, 2*len(faceparts.HIST_SCAN_POINTS))
+        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=1)
         for i in range(len(hists_data)):
             data = hists_data[i]
             # print(data)
@@ -131,12 +147,15 @@ while vd.isOpened():
             x2 = data['area'][1][0]
             y2 = data['area'][1][1]
             axs[i].set_title(data['label'] + '_' + str(frame_cnt))
+            axs[i].axes.get_xaxis().set_visible(False)
             axs[i].hist(gray_frame[y1:y2, x1:x2].ravel(),256,[0,256])
             face_parts_frames.append(
                 cv.cvtColor(gray_frame[y1:y2, x1:x2], cv.COLOR_GRAY2BGR)
                 )
-        fig.canvas.draw()
-        fig.canvas.flush_events()   
+        if not first_frame:
+            fig.canvas.draw()
+            fig.canvas.flush_events()  
+            plt.show() 
 
     print(f'~ render #{frame_cnt}')
 
@@ -149,26 +168,29 @@ while vd.isOpened():
     frame_to_show_2 = cv.resize(frame_to_show_2, dim, interpolation = cv.INTER_AREA)
 
     # show
-    face_parts_frames_united = np.concatenate(face_parts_frames, axis=1)
-    multi_frames = np.concatenate((frame_to_show, frame_to_show_2), axis=1)
-    face_parts_frames_united = cv.resize(
-        face_parts_frames_united, 
-        (
-            #       x1 / y1 = x2 / y2
-            # =>    y2 = x2 * y1 / x1
-            multi_frames.shape[1],
-            int(float(multi_frames.shape[1]) * face_parts_frames_united.shape[0] / face_parts_frames_united.shape[1]),
-        ), 
-        interpolation = cv.INTER_AREA)
-    multi_frames = np.concatenate((multi_frames, face_parts_frames_united), axis=0)
+    multi_frames = np.concatenate((frame_to_show_2, frame_to_show), axis=1)
+    if len(shapes)>0:
+        face_parts_frames_united = np.concatenate(face_parts_frames, axis=1)
+        face_parts_frames_united = cv.resize(
+            face_parts_frames_united, 
+            (
+                #       x1 / y1 = x2 / y2
+                # =>    y2 = x2 * y1 / x1
+                multi_frames.shape[1],
+                int(float(multi_frames.shape[1]) * face_parts_frames_united.shape[0] / face_parts_frames_united.shape[1]),
+            ), 
+            interpolation = cv.INTER_AREA)
+        multi_frames = np.concatenate((multi_frames, face_parts_frames_united), axis=0)
     cv.imshow('Play', multi_frames)
 
-    print(f'~ waiting key #{frame_cnt}')
-    if WAIT_KEY == 1:
-        time.sleep(DELAY)
-    if cv.waitKey(WAIT_KEY) == ord('q'):
-        plt.pause(0.1) 
-        break 
+    if not first_frame:
+        print(f'~ waiting key #{frame_cnt}')
+        if WAIT_KEY == 1:
+            time.sleep(DELAY)
+        if cv.waitKey(WAIT_KEY) == ord('q'):
+            break 
+
+    plt.close('all')
 
 vd.release()
 cv.destroyAllWindows()
