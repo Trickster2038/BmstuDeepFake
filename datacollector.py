@@ -168,6 +168,7 @@ def generate_shape(frame, filename, is_fake, frame_n, face_classifier):
 
 SAVEABLE = True
 SAVE_PATH = '../dataset_frames/'
+SAVE_FAIL_PATH = '../dataset_frames_fail/'
 FOLDER_PATH = '../DeepfakeChallenge/train_sample_videos/'
 METADATA_PATH = 'metadata.json'
 TARGET_FRAME_N = 30
@@ -221,6 +222,8 @@ if __name__ == "__main__":
 
                 if SAVEABLE and not(d is None):
                     cv.imwrite(SAVE_PATH + str(cnt_total) + '_' + filename + '.png', frame_result)
+                if SAVEABLE and (d is None):
+                    cv.imwrite(SAVE_FAIL_PATH + str(cnt_total) + '_' + filename + '.png', frame_result)
                     
     df_total.to_json(OUTPUT_FILENAME)
     vd.release()
