@@ -171,8 +171,8 @@ SAVE_PATH = '../dataset_frames/'
 FOLDER_PATH = '../DeepfakeChallenge/train_sample_videos/'
 METADATA_PATH = 'metadata.json'
 TARGET_FRAME_N = 30
-SAMPLE_SIZE = 50
-OUTPUT_FILENAME = 'dataframe_total.csv'
+SAMPLE_SIZE = 10
+OUTPUT_FILENAME = 'dataframe_total.json'
 
 if __name__ == "__main__":
 
@@ -215,14 +215,14 @@ if __name__ == "__main__":
                     if df_total is None:
                         df_total = pd.DataFrame(data=d)
                     else:
-                        df_total = pd.concat([df_total, d], ignore_index=True)
+                        df_total = pd.concat([df_total, pd.DataFrame(data=d)], ignore_index=True)
                 else:
                     print(f'processing frame #{cnt_outer} - no face found')
 
                 if SAVEABLE and not(d is None):
                     cv.imwrite(SAVE_PATH + str(cnt_total) + '_' + filename + '.png', frame_result)
                     
-    df_total.to_csv(OUTPUT_FILENAME)
+    df_total.to_json(OUTPUT_FILENAME)
     vd.release()
     cv.destroyAllWindows()
     print(f'\nfaces found: {cnt_total}')
