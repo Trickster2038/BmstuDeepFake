@@ -32,8 +32,18 @@ def generate_dataframe(filename, is_fake, shape, frame, frame_scale_percent):
         
             data['pt_' + str(point_id) + '_' + zone +'_raw'] = [gray_frame[y1:y2, x1:x2].ravel()]
 
+    # overall face calcs
+    point_x = int((shape[fp.LEFT_EAR_POINT][0] + shape[fp.RIGHT_EAR_POINT][0])/2)
+    point_y = int((shape[fp.LEFT_EAR_POINT][1] + shape[fp.RIGHT_EAR_POINT][1])/2)
+    x1, y1, x2, y2 = \
+                int(point_x - int(r)), \
+                int(point_y - int(r)), \
+                int(point_x + int(r)), \
+                int(point_y + int(r))
+    data['overall_face_raw'] = [gray_frame[y1:y2, x1:x2].ravel()]
+
     df = pd.DataFrame(data=data)
-    return df.copy()
+    return (df.copy(), {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2})
 
 MAX_WIDTH = 720
 MAX_HEIGHT = 480
@@ -41,6 +51,7 @@ FPS_LABEL_BORDER_PERCENT = 10
 FACE_DETECTION_SIZE_PERCENT = 20
 
 TEXT_COLOR = (0,255,0)
+OVERALL_FACE_COLOR = (255, 0, 0)
 TEXT_SCALE = 3
 TEXT_THICKNESS = 2
 TEXT_FONT = cv.FONT_HERSHEY_SIMPLEX
@@ -87,7 +98,15 @@ def generate_shape(frame, filename, is_fake, frame_n, face_classifier):
         shapes = fp.detect_faces(frame_to_show)
 
     if len(shapes) > 0:
-        df = generate_dataframe(filename, is_fake, shapes[0], frame, HIST_SIZE_PERCENT)
+        df, rect = generate_dataframe(filename, is_fake, shapes[0], frame, HIST_SIZE_PERCENT)
+        cv.rectangle(
+                frame_to_show_2, 
+                (rect['x1'], rect['y1']), 
+                (rect['x2'], rect['y2']), 
+                OVERALL_FACE_COLOR, 
+                TEXT_SCALE
+                )
+
         shp = shapes[0]
         frame_to_show = fp.visualize_facial_landmarks(
             frame_to_show, 
