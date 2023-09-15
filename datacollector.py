@@ -191,7 +191,7 @@ SAVE_FAIL_PATH = '../dataset_frames_fail/'
 FOLDER_PATH = '../DeepfakeChallenge/train_sample_videos/'
 METADATA_PATH = 'metadata.json'
 TARGET_FRAME_N = 30
-SAMPLE_SIZE = 10
+SAMPLE_SIZE = 0
 OUTPUT_FILENAME = 'dataframe_total.json'
 
 if __name__ == "__main__":
@@ -207,7 +207,8 @@ if __name__ == "__main__":
 
     df_fakes = pd.read_json(METADATA_PATH)
     df_fakes = df_fakes.T
-    df_fakes = df_fakes.sample(SAMPLE_SIZE)
+    if SAMPLE_SIZE > 0:
+        df_fakes = df_fakes.sample(SAMPLE_SIZE)
     df_fakes['filename'] = df_fakes.index
     df_fakes = df_fakes.reset_index()
 
