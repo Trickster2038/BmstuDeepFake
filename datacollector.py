@@ -48,7 +48,7 @@ def generate_dataframe(filename, is_fake, shape, frame, frame_scale_percent):
 MAX_WIDTH = 720
 MAX_HEIGHT = 480
 FPS_LABEL_BORDER_PERCENT = 10 
-FACE_DETECTION_SIZE_PERCENT = 20
+FACE_DETECTION_SIZE_PERCENT = 10
 
 TEXT_COLOR = (0,255,0)
 OVERALL_FACE_COLOR = (255, 0, 0)
@@ -188,11 +188,11 @@ def generate_shape(frame, filename, is_fake, frame_n, face_classifier):
 SAVEABLE = True
 SAVE_PATH = '../dataset_frames/'
 SAVE_FAIL_PATH = '../dataset_frames_fail/'
-FOLDER_PATH = '../DeepfakeChallenge/train_sample_videos/'
-METADATA_PATH = 'metadata.json'
+FOLDER_PATH = '../dfdc_train_part_1/'
+METADATA_PATH = '../dfdc_train_part_1/metadata.json'
 TARGET_FRAME_N = 30
 SAMPLE_SIZE = 0 # 0 - no limit
-OUTPUT_FILENAME = '../dataframe_total.json'
+OUTPUT_FILENAME = '../dataframe_total_1.json'
 
 if __name__ == "__main__":
 
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     for index, row in df_fakes.iterrows():
         cnt_outer += 1
-        print(f'processing frame #{cnt_outer}')
+        print(f'processing frame #{cnt_outer}, already found={cnt_total}')
         is_fake = (row['label'] == 'FAKE')
         filename = row['filename']
 
