@@ -191,8 +191,8 @@ SAVE_FAIL_PATH = '../dataset_frames_fail/'
 FOLDER_PATH = '../DeepfakeChallenge/train_sample_videos/'
 METADATA_PATH = 'metadata.json'
 TARGET_FRAME_N = 30
-SAMPLE_SIZE = 0
-OUTPUT_FILENAME = 'dataframe_total.json'
+SAMPLE_SIZE = 0 # 0 - no limit
+OUTPUT_FILENAME = '../dataframe_total.json'
 
 if __name__ == "__main__":
 
