@@ -56,7 +56,8 @@ TEXT_SCALE = 3
 TEXT_THICKNESS = 2
 TEXT_FONT = cv.FONT_HERSHEY_SIMPLEX
 
-HIST_SIZE_PERCENT = 15 # relative to face width
+# 15 - default, f1 = 0.60
+HIST_SIZE_PERCENT = 17 # relative to face width
 
 # returns (frame, None) or (frame, df)
 def generate_shape(frame, filename, is_fake, frame_n, face_classifier):
@@ -192,7 +193,7 @@ FOLDER_PATH = '../dfdc_videos/dfdc_train_part_4/'
 METADATA_PATH = '../dfdc_videos/dfdc_train_part_4/metadata.json'
 TARGET_FRAME_N = 30
 SAMPLE_SIZE = 0 # 0 - no limit
-OUTPUT_FILENAME = '../dfdc_dataframes/dataframe_total_4.json'
+OUTPUT_FILENAME = '../dfdc_dataframes/dataframe_total_4_frame_17.json'
 
 if __name__ == "__main__":
 
