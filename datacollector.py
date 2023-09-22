@@ -189,11 +189,11 @@ def generate_shape(frame, filename, is_fake, frame_n, face_classifier):
 SAVEABLE = True
 SAVE_PATH = '../dataset_frames/'
 SAVE_FAIL_PATH = '../dataset_frames_fail/'
-FOLDER_PATH = '../dfdc_videos/dfdc_train_part_1/'
-METADATA_PATH = '../dfdc_videos/dfdc_train_part_1/metadata.json'
+FOLDER_PATH = '../dfdc_videos/dfdc_train_part_4/'
+METADATA_PATH = '../dfdc_videos/dfdc_train_part_4/metadata.json'
 TARGET_FRAME_N = 30
 SAMPLE_SIZE = 0 # 0 - no limit
-OUTPUT_FILENAME = '../dfdc_dataframes/dataframe_total_1_frame_10.json'
+OUTPUT_FILENAME = '../dfdc_dataframes/dataframe_total_4_frame_10.json'
 
 if __name__ == "__main__":
 
