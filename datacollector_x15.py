@@ -195,7 +195,7 @@ TARGET_FRAME_N = 10
 TARGET_FRAME_AMOUNT = 15
 SAMPLE_SIZE = 0 # 0 - no limit
 
-OFFSET = 400
+OFFSET = 900
 LIMIT = 100
 OUTPUT_FILENAME = f'../deep_fake_src/dfdc_dataframes/dataframe_total_27_frame_10_lim{LIMIT}_offset{OFFSET}.json'
 
