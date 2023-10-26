@@ -14,12 +14,14 @@ print('===== Init =====')
 # FILE_PATH = '../ml_fake_videos/real_icc_court_1080.mp4'
 # FILE_PATH = '../ml_fake_videos/real_poperechnii_1080.mp4'
 # FILE_PATH = '../ml_fake_videos/fake_obama_720.mp4'
-# FILE_PATH = '../ml_fake_videos/fake_backtofuture_1080.mp4'
+FILE_PATH = '../deep_fake_src/ml_fake_videos/fake_backtofuture_1080.mp4'
 # FILE_PATH = '../ml_fake_videos/fake_gin_1080.mp4'
-# FILE_PATH = '../ml_fake_videos/fake_joker_1080.mp4'
-# FILE_PATH = '../ml_fake_videos/fake_terminator_720.mp4'
+# FILE_PATH = '../deep_fake_src/ml_fake_videos/fake_joker_1080.mp4'
+# FILE_PATH = '../deep_fake_src/ml_fake_videos/fake_terminator_720.mp4'
 # FILE_PATH = '../deep_fake_src/ml_fake_videos/real_poperechnii_1080.mp4'
-FILE_PATH = '../deep_fake_src/ml_fake_videos/fake_freeman_1080.mp4'
+# FILE_PATH = '../deep_fake_src/ml_fake_videos/fake_freeman_1080.mp4'
+
+# FILE_PATH = '../deep_fake_src/dfdc_train_part_27/aecmpgzdbs.mp4' # fake
 
 # SCALE_PERCENT = 30
 MAX_WIDTH = 480
@@ -43,7 +45,8 @@ HIST_SIZE_PERCENT = 15 # relative to face width
 # fig.set_size_inches(len(faceparts.HIST_SCAN_POINTS), 7)
 # plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=None)
 
-NOISE_REGION_SIZE = 15
+NOISE_REGION_SIZE = 3
+NOISE_SIGMA = 60
 
 vd = cv.VideoCapture(FILE_PATH)
 frame_cnt = 0
@@ -61,9 +64,9 @@ while vd.isOpened():
     frame_to_show_2 = frame.copy()
 
     gray_frame = cv.cvtColor(frame.copy(), cv.COLOR_BGR2GRAY)
-    # img_filtered = cv.medianBlur(frame_to_show_2, NOISE_REGION_SIZE)
-    # img_filtered = cv.GaussianBlur(frame_to_show_2, (NOISE_REGION_SIZE, NOISE_REGION_SIZE), 0)
-    img_filtered = cv.bilateralFilter(frame_to_show_2,7,70,70)
+    img_filtered_1 = cv.medianBlur(frame_to_show_2, NOISE_REGION_SIZE)
+    img_filtered_2 = cv.GaussianBlur(frame_to_show_2, (NOISE_REGION_SIZE, NOISE_REGION_SIZE), 0)
+    img_filtered_3 = cv.bilateralFilter(frame_to_show_2, NOISE_REGION_SIZE, NOISE_SIGMA, NOISE_SIGMA)
 
     # count frames
     text = str(frame_cnt)
@@ -81,9 +84,13 @@ while vd.isOpened():
     dim = (width, height)
     frame_to_show = cv.resize(frame_to_show, dim, interpolation = cv.INTER_AREA)
     frame_to_show_2 = cv.resize(frame_to_show_2, dim, interpolation = cv.INTER_AREA)
-    img_filtered = cv.resize(img_filtered, dim, interpolation = cv.INTER_AREA)
+    img_filtered_1 = cv.resize(img_filtered_1, dim, interpolation = cv.INTER_AREA)
+    img_filtered_2 = cv.resize(img_filtered_2, dim, interpolation = cv.INTER_AREA)
+    img_filtered_3 = cv.resize(img_filtered_3, dim, interpolation = cv.INTER_AREA)
     # show
-    multi_frames = np.concatenate((img_filtered - frame_to_show, frame_to_show), axis=1)
+    multi_frames_1 = np.concatenate((img_filtered_1 - frame_to_show, frame_to_show), axis=1)
+    multi_frames_2 = np.concatenate((img_filtered_2 - frame_to_show, img_filtered_3 - frame_to_show), axis=1)
+    multi_frames = np.concatenate((multi_frames_1, multi_frames_2), axis=0)
     cv.imshow('Play', multi_frames)
 
     if not first_frame:
